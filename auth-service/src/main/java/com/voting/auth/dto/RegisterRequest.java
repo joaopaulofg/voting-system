@@ -1,5 +1,7 @@
 package com.voting.auth.dto;
 
+import com.voting.auth.model.Role;
+
 public record RegisterRequest(
         String nome,
         String sobrenome,
@@ -7,6 +9,7 @@ public record RegisterRequest(
         String username,
         String password,
         String telefone,
-        String email
+        String email,
+        Role role
 ) {
 }
