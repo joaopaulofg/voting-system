@@ -3,6 +3,7 @@ package com.voting.auth.dto;
 import com.voting.auth.model.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 
 public record RegisterRequest(
         @NotBlank String nome,
