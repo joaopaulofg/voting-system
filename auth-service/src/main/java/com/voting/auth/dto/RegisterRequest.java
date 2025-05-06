@@ -1,15 +1,17 @@
 package com.voting.auth.dto;
 
 import com.voting.auth.model.Role;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 
 public record RegisterRequest(
-        String nome,
-        String sobrenome,
-        String cpf,
-        String username,
-        String password,
+        @NotBlank String nome,
+        @NotBlank String sobrenome,
+        @NotBlank @Pattern(regexp = "\\d{11}") String cpf,
+        @NotBlank String username,
+        @NotBlank String password,
         String telefone,
-        String email,
-        Role role
+        @Email String email,
+        @NotBlank Role role
 ) {
 }

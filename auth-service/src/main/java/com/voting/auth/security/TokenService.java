@@ -8,6 +8,7 @@ import com.voting.auth.model.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -20,7 +21,8 @@ public class TokenService {
 
     public String generateToken(User user) {
         try{
-            Algorithm algorithm = Algorithm.HMAC256(secret);
+            Algorithm algorithm = Algorithm.HMAC256(secret.getBytes(StandardCharsets.UTF_8));
+
             return JWT.create()
                     .withIssuer("auth-service")
                     .withSubject(user.getUsername())
@@ -33,14 +35,14 @@ public class TokenService {
 
     public String validateToken(String token) {
         try{
-            Algorithm algorithm = Algorithm.HMAC256(secret);
+            Algorithm algorithm = Algorithm.HMAC256(secret.getBytes(StandardCharsets.UTF_8));
             return JWT.require(algorithm)
                     .withIssuer("auth-service")
                     .build()
                     .verify(token)
                     .getSubject();
         } catch (JWTVerificationException exception) {
-            return "";
+            return null;
         }
     }
 

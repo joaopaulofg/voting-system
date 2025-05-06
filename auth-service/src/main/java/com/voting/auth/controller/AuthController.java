@@ -6,6 +6,7 @@ import com.voting.auth.mapper.UserMapper;
 import com.voting.auth.model.User;
 import com.voting.auth.repository.UserRepository;
 import com.voting.auth.service.AuthService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,14 +20,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("auth")
 public class AuthController {
 
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    private AuthService authService;
+    private final AuthService authService;
 
     @PostMapping("/register")
-    public ResponseEntity authenticate(@RequestBody RegisterRequest data) {
+    public ResponseEntity<RegisterResponse> authenticate(@Valid @RequestBody RegisterRequest data) {
         if(this.userRepository.findByUsername(data.username()) != null) return ResponseEntity.badRequest().build();
         User user = UserMapper.INSTANCE.convertDtoToUser(data);
         RegisterResponse newUser = authService.register(user);

@@ -6,16 +6,19 @@ import com.voting.auth.model.User;
 import com.voting.auth.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @AllArgsConstructor
 @Service
 public class AuthService {
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+
+    private final PasswordEncoder passwordEncoder;
 
     public RegisterResponse register(User user) {
-        String encryptedPassword = new BCryptPasswordEncoder().encode(user.getPassword());
+        String encryptedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encryptedPassword);
         userRepository.save(user);
         return UserMapper.INSTANCE.convertUserToDto(user);
