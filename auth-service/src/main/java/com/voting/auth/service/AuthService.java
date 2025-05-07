@@ -10,13 +10,8 @@ import com.voting.auth.repository.UserRepository;
 import com.voting.auth.security.TokenService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.apache.catalina.Authenticator;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
