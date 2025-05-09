@@ -42,5 +42,4 @@ public class AuthService{
         var token = tokenService.generateToken((User) auth.getPrincipal());
         return new LoginResponse(token);
     }
-
 }

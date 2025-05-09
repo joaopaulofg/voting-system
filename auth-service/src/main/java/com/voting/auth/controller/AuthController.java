@@ -1,11 +1,14 @@
 package com.voting.auth.controller;
 
 import com.voting.auth.dto.*;
+import com.voting.auth.model.User;
 import com.voting.auth.repository.UserRepository;
 import com.voting.auth.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @AllArgsConstructor
@@ -28,5 +31,12 @@ public class AuthController {
     public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest data) {
         LoginResponse loginResponse = authService.login(data);
         return ResponseEntity.ok(loginResponse);
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<MeResponse> me(@AuthenticationPrincipal UserDetails userDetails) {
+        var user = (User) userDetails; // cast para sua entidade
+        var response = new MeResponse(user.getId(), user.getEmail(), user.getUsername(), user.getRole());
+        return ResponseEntity.ok(response);
     }
 }
