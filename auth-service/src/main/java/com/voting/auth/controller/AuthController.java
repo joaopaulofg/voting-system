@@ -4,6 +4,7 @@ import com.voting.auth.dto.*;
 import com.voting.auth.model.User;
 import com.voting.auth.repository.UserRepository;
 import com.voting.auth.service.AuthService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +34,7 @@ public class AuthController {
         return ResponseEntity.ok(loginResponse);
     }
 
+    @Operation(summary = "Obter informações do usuário autenticado", description = "Esse endpoint retorna as informações do usuário atualmente autenticado, id, e-mail, username e role.")
     @GetMapping("/me")
     public ResponseEntity<MeResponse> me(@AuthenticationPrincipal UserDetails userDetails) {
         var user = (User) userDetails; // cast para sua entidade
