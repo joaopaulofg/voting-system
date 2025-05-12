@@ -1,20 +1,18 @@
 package com.voting.auth.service;
 
-import com.voting.auth.dto.LoginRequest;
-import com.voting.auth.dto.LoginResponse;
-import com.voting.auth.dto.RegisterRequest;
-import com.voting.auth.dto.RegisterResponse;
+import com.voting.auth.dto.*;
 import com.voting.auth.mapper.UserMapper;
 import com.voting.auth.model.User;
 import com.voting.auth.repository.UserRepository;
 import com.voting.auth.security.TokenService;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 
 @Service
 public class AuthService{
@@ -47,12 +45,20 @@ public class AuthService{
         user.setPassword(encryptedPassword);
         userRepository.save(user);
 
-        notificarRabbitMQ(user);
+        var evento = new UsuarioCadastradoEvent(
+                user.getId(),
+                user.getUsername(),
+                user.getEmail(),
+                user.getRole().name(),
+                LocalDateTime.now()
+        );
+
+        notificarRabbitMQ(evento);
 
         return UserMapper.INSTANCE.convertUserToDto(user);
     }
 
-    private void notificarRabbitMQ(User user) {
+    private void notificarRabbitMQ(UsuarioCadastradoEvent user) {
         try{
             notificacaoRabbitService.notificar(user, exchangeNovoUsuario);
         }catch (RuntimeException e){
