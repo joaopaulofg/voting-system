@@ -16,7 +16,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-@AllArgsConstructor
 @Service
 public class AuthService{
 
@@ -30,7 +29,17 @@ public class AuthService{
 
     private final NotificacaoRabbitService notificacaoRabbitService;
 
-    private final String exchange = "novo-usuario.ex";
+    private final String exchangeNovoUsuario;
+
+    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager,
+                       TokenService tokenService, NotificacaoRabbitService notificacaoRabbitService, @Value("${rabbitmq.novousuario.exchange}") String exchangeNovoUsuario) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.authenticationManager = authenticationManager;
+        this.tokenService = tokenService;
+        this.notificacaoRabbitService = notificacaoRabbitService;
+        this.exchangeNovoUsuario = exchangeNovoUsuario;
+    }
 
     public RegisterResponse register(RegisterRequest data) {
         User user = UserMapper.INSTANCE.convertDtoToUser(data);
@@ -45,7 +54,7 @@ public class AuthService{
 
     private void notificarRabbitMQ(User user) {
         try{
-            notificacaoRabbitService.notificar(user, exchange);
+            notificacaoRabbitService.notificar(user, exchangeNovoUsuario);
         }catch (RuntimeException e){
             System.out.println("Erro ao notificar");
         }
