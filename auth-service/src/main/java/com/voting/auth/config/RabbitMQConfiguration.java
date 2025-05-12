@@ -16,9 +16,12 @@ public class RabbitMQConfiguration {
     @Value("${rabbitmq.novousuario.exchange}")
     private String exchangeNovoUsuario;
 
+    @Value("${rabbitmq.novousuario.queue}")
+    private String queueNovoUsuario;
+
     @Bean
-    public Queue criarFilaNovoUsurioMsNotificacao() {
-        return QueueBuilder.durable("novo-usuario.ms-notificacao").build();
+    public Queue criarFilaNovoUsuarioMsNotificacao() {
+        return QueueBuilder.durable(queueNovoUsuario).build();
     }
 
     @Bean
@@ -33,7 +36,7 @@ public class RabbitMQConfiguration {
 
     @Bean
     public Binding criarBindingNovoUsuarioMsNotificacao() {
-        return BindingBuilder.bind(criarFilaNovoUsurioMsNotificacao()).to(criarFanoutNovoUsuario());
+        return BindingBuilder.bind(criarFilaNovoUsuarioMsNotificacao()).to(criarFanoutNovoUsuario());
     }
 
     @Bean
